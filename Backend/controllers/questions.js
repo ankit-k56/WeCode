@@ -1,7 +1,22 @@
 const pool = require('../db/postgrase')
+const fs = require('fs')
+const path = require('path')
 
 
 const GetAllQuestion = async(req,res)=>{
+    const tempPath = './temp'
+    fs.readdir(tempPath,(err, files)=>{
+        if (err) throw err ;
+        for( let i = 0; i<files.length ;i++){
+            const filePath = path.join(tempPath , files[i])
+            // console.log(filePath)
+            fs.unlink(filePath, (err)=>{
+                if (err) throw err;
+                // console.log('File deleted')
+            })
+        }
+
+    })
     // res.status(200).json({QUESTIONS})
     const questions = await pool.query("SELECT * FROM questions");
     res.status(200).json({questions: questions.rows})
